@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <!-- 폰에서 세로 전체 화면으로 (확대·스크롤 막기). 지글지글 디펜스 웹 시험판 템플릿 (2026-10-08) -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <title>Sizzle Defense</title>
+  <style>
+    html, body { margin: 0; height: 100%; background: #1b1210; overflow: hidden; touch-action: none; -webkit-user-select: none; user-select: none; }
+    #game { position: fixed; inset: 0; width: 100%; height: 100%; display: block; background: #1b1210; }
+    #loading { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+               color: #f3e2c7; font: 16px -apple-system, sans-serif; }
+    #bar { width: 60%; height: 10px; background: #3a2a22; border-radius: 5px; overflow: hidden; }
+    #fill { width: 0; height: 100%; background: #e0453a; }
+    #why { width: 80%; text-align: center; font-size: 13px; color: #c9a98a; word-break: break-all; }
+  </style>
+</head>
+<body>
+  <canvas id="game" tabindex="-1"></canvas>
+  <div id="loading"><div id="text">불러오는 중… 0%</div><div id="bar"><div id="fill"></div></div><div id="why"></div></div>
+  <script>
+    // 멈추면 이유가 화면에 보이게 해요 (2026-10-08: itch.io 에서 0% 에 말없이 멈췄어요)
+    var shown = false;
+    function fail(message) {
+      if (shown) return; shown = true;
+      document.getElementById("text").textContent = "불러오지 못했어요";
+      document.getElementById("why").textContent = String(message);
+    }
+    window.addEventListener("error", function (e) { if (!window.gameStarted) fail(e.message || "스크립트 오류"); });
+    window.addEventListener("unhandledrejection", function (e) { if (!window.gameStarted) fail(e.reason || "알 수 없는 오류"); });
+  </script>
+  <script src="Build/WebGL.loader.js" onerror="fail('게임 파일(Build/WebGL.loader.js)을 받지 못했어요')"></script>
+  <script>
+    var loading = document.getElementById("loading");
+    var lastProgress = 0;
+    setTimeout(function () {
+      if (!window.gameStarted && lastProgress === 0 && !shown)
+        document.getElementById("why").textContent = "아직 0% 예요 — 새로고침하거나 다른 브라우저로 열어 보세요";
+    }, 20000);
+    if (typeof createUnityInstance !== "function") fail("게임 로더를 불러오지 못했어요");
+    else createUnityInstance(document.getElementById("game"), {
+      dataUrl: "Build/WebGL.data.unityweb",
+      frameworkUrl: "Build/WebGL.framework.js.unityweb",
+      codeUrl: "Build/WebGL.wasm.unityweb",
+      companyName: "JungHan",
+      productName: "Sizzle Defense",
+      productVersion: "1.0",
+      // 아이폰은 화면 배율이 3이라 그대로 그리면 무거워요 — 2배까지만
+      devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2),
+      matchWebGLToCanvasSize: true
+    }, function (progress) {
+      lastProgress = progress;
+      var pct = Math.round(progress * 100);
+      document.getElementById("fill").style.width = pct + "%";
+      if (!shown) document.getElementById("text").textContent = pct >= 90 ? "준비하는 중…" : "불러오는 중… " + pct + "%";
+    }).then(function () {
+      window.gameStarted = true;
+      loading.remove();
+    }).catch(fail);
+  </script>
+</body>
+</html>
