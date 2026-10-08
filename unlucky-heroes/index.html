@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>언럭키 히어로즈 소개</title>
+    <meta name="description" content="소환하고 합성해 몰려오는 몬스터를 막는 2D 타워 디펜스 '언럭키 히어로즈'의 소개, 플레이 화면, 개발 내용">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+
+    <style>
+        :root {
+            /* 색은 4가지만 씁니다: 종이, 잉크, 세이지 그린, 더스티 로즈 */
+            --paper: #f3ecdc; --ink: #3b322e; --green: #b9d3a6; --pink: #e7b7bb;
+            --paper-2: color-mix(in srgb, var(--ink) 8%, var(--paper));
+            --ink-soft: color-mix(in srgb, var(--ink) 82%, var(--paper));
+            --ink-mute: color-mix(in srgb, var(--ink) 68%, var(--paper));
+            --line: 2.5px solid var(--ink); --shadow: 5px 5px 0 var(--ink); --shadow-s: 3px 3px 0 var(--ink);
+            --display: 'Jua', 'Pretendard', sans-serif;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, 'Segoe UI', sans-serif;
+            background-color: var(--paper);
+            background-image: radial-gradient(rgba(59, 50, 46, 0.06) 1.2px, transparent 1.2px);
+            background-size: 22px 22px;
+            color: var(--ink); line-height: 1.8; word-break: keep-all; -webkit-font-smoothing: antialiased;
+        }
+        a { color: inherit; }
+        img { max-width: 100%; display: block; }
+        ::selection { background: var(--pink); }
+        .wrap { max-width: 1040px; margin: 0 auto; padding: 0 20px; }
+
+        .top { border-bottom: var(--line); background: var(--paper); position: sticky; top: 0; z-index: 10; }
+        .top .wrap { height: 56px; display: flex; align-items: center; justify-content: space-between; }
+        .back { font-weight: 800; font-size: 0.92rem; text-decoration: none; border: 2px solid var(--ink); border-radius: 999px; padding: 3px 14px; background: var(--paper); }
+        .back:hover { background: var(--green); }
+        .brand { font-family: var(--display); font-size: 1.1rem; }
+
+        .hero { padding: 56px 0 36px; display: grid; grid-template-columns: 1fr 1.1fr; gap: 40px; align-items: center; }
+        .kicker { display: inline-block; font-weight: 800; font-size: 0.84rem; letter-spacing: 0.05em; background: var(--green); border: var(--line); border-radius: 999px; padding: 4px 16px; box-shadow: var(--shadow-s); transform: rotate(-2deg); margin-bottom: 20px; }
+        h1 { font-family: var(--display); font-weight: 400; font-size: clamp(2.4rem, 7vw, 4.2rem); line-height: 1.15; margin-bottom: 16px; }
+        h1 mark { background: linear-gradient(transparent 58%, var(--pink) 58%, var(--pink) 92%, transparent 92%); color: inherit; padding: 0 4px; }
+        .lead { color: var(--ink-soft); font-size: 1.1rem; margin-bottom: 18px; }
+        .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+        .chips span { font-size: 0.84rem; font-weight: 700; border: 2px solid var(--ink); border-radius: 10px; padding: 2px 12px; background: var(--paper); }
+        .chips b { color: var(--ink-mute); font-weight: 700; margin-right: 6px; }
+        .polaroid { position: relative; background: var(--paper); border: var(--line); border-radius: 8px; padding: 10px; box-shadow: var(--shadow); transform: rotate(1.4deg); }
+        .polaroid::before { content: ""; position: absolute; top: -13px; left: 50%; width: 84px; height: 24px; margin-left: -42px; background: var(--pink); border: 2px solid var(--ink); transform: rotate(-3deg); }
+        .polaroid img { border: 2px solid var(--ink); border-radius: 4px; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+
+        section { padding: 44px 0 10px; }
+        .sec-head { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+        .no { flex: none; width: 54px; height: 54px; display: grid; place-items: center; font-family: var(--display); font-size: 1.4rem; border: var(--line); border-radius: 50%; background: var(--green); box-shadow: var(--shadow-s); }
+        section:nth-of-type(even) .no { background: var(--pink); }
+        .eyebrow { font-size: 0.76rem; font-weight: 800; letter-spacing: 0.12em; color: var(--ink-mute); }
+        h2 { font-family: var(--display); font-weight: 400; font-size: clamp(1.6rem, 4vw, 2.2rem); line-height: 1.25; }
+        p { color: var(--ink-soft); font-size: 1.04rem; margin-bottom: 14px; }
+        p strong, li strong { color: var(--ink); font-weight: 800; }
+
+        .feat { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 22px; margin: 20px 5px 8px 0; }
+        .card { background: var(--paper); border: var(--line); border-radius: 18px; box-shadow: var(--shadow); padding: 22px 20px 16px; }
+        .card:nth-child(odd) { transform: rotate(-0.6deg); } .card:nth-child(even) { transform: rotate(0.6deg); }
+        .card .ico { width: 42px; height: 42px; display: grid; place-items: center; font-size: 1.3rem; border: var(--line); border-radius: 12px; background: var(--green); margin-bottom: 10px; }
+        .card:nth-child(even) .ico { background: var(--pink); }
+        .card h3 { font-family: var(--display); font-weight: 400; font-size: 1.2rem; margin-bottom: 6px; }
+        .card p { font-size: 0.95rem; margin-bottom: 8px; }
+
+        .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 34px 26px; margin: 26px 5px 10px 0; }
+        figure { background: var(--paper); border: var(--line); border-radius: 8px; padding: 10px 10px 4px; box-shadow: var(--shadow); position: relative; }
+        figure:nth-child(odd) { transform: rotate(-0.8deg); } figure:nth-child(even) { transform: rotate(0.8deg); }
+        figure::before { content: ""; position: absolute; top: -12px; left: 50%; width: 70px; height: 22px; margin-left: -35px; background: var(--green); border: 2px solid var(--ink); transform: rotate(-3deg); z-index: 1; }
+        figure:nth-child(even)::before { background: var(--pink); transform: rotate(3deg); }
+        figure button { all: unset; display: block; width: 100%; cursor: zoom-in; }
+        figure button:focus-visible { outline: 3px solid var(--pink); outline-offset: 2px; }
+        figure img { border: 2px solid var(--ink); border-radius: 4px; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+        figcaption { padding: 12px 6px 10px; font-size: 0.92rem; color: var(--ink-soft); line-height: 1.65; }
+        figcaption b { display: block; font-family: var(--display); font-weight: 400; font-size: 1.1rem; color: var(--ink); }
+
+        .video { max-width: 860px; margin: 24px auto 6px; }
+        .video .polaroid { transform: rotate(-0.5deg); }
+        .video .polaroid::before { background: var(--green); }
+        .note { font-size: 0.86rem; color: var(--ink-mute); margin-top: 12px; }
+
+        ul.list { list-style: none; margin: 8px 0 14px; }
+        ul.list li { position: relative; padding: 0 0 12px 30px; color: var(--ink-soft); }
+        ul.list li::before { content: ""; position: absolute; left: 4px; top: 9px; width: 12px; height: 12px; border: 2px solid var(--ink); border-radius: 50%; background: var(--green); }
+        ul.list li:nth-child(even)::before { background: var(--pink); }
+
+        .callout { background: var(--pink); border: var(--line); border-radius: 6px 6px 6px 20px; padding: 14px 18px; box-shadow: var(--shadow-s); font-weight: 600; font-size: 0.95rem; color: var(--ink); margin: 20px 5px 0 0; }
+        footer { margin-top: 56px; border-top: var(--line); background: var(--green); padding: 22px 0 32px; font-size: 0.88rem; font-weight: 700; }
+        footer span { color: var(--ink-soft); font-weight: 600; }
+
+        dialog.lightbox { border: 0; background: transparent; max-width: 94vw; max-height: 92vh; padding: 0; overflow: visible; }
+        dialog.lightbox::backdrop { background: rgba(59, 50, 46, 0.85); }
+        dialog.lightbox img { max-width: 94vw; max-height: 84vh; border: var(--line); border-radius: 10px; }
+        dialog.lightbox p { text-align: center; color: var(--paper); font-weight: 700; font-size: 0.92rem; margin: 10px 0 0; }
+
+        @media (max-width: 860px) { .hero { grid-template-columns: 1fr; gap: 28px; } }
+        @media (max-width: 560px) { .hero { padding-top: 36px; } .gallery { grid-template-columns: 1fr; } .feat { margin-right: 0; } }
+        @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+    </style>
+</head>
+<body>
+    <div class="top"><div class="wrap"><a class="back" href="../">← 게임 모음</a><span class="brand">이정한 게임</span></div></div>
+
+    <main class="wrap">
+        <header class="hero">
+            <div>
+                <span class="kicker">STOVE 출시작 · 팀 프로젝트</span>
+                <h1>언럭키<br><mark>히어로즈</mark></h1>
+                <p class="lead">소환하고 합성한 영웅들로 필드를 에워싸는 몬스터를 막아 내는 <strong>2D 타워 디펜스</strong>입니다. 운에 맡긴 소환을 합성과 강화로 뒤집는 맛이 핵심이에요.</p>
+                <div class="chips">
+                    <span><b>장르</b>2D 타워 디펜스</span>
+                    <span><b>플랫폼</b>PC (스토브)</span>
+                    <span><b>엔진</b>Unity 6 · C#</span>
+                    <span><b>기간</b>2026.03 ~ 2026.07</span>
+                    <span><b>팀</b>4명 (개발 담당)</span>
+                </div>
+                <!-- STOVE_URL: 스토브 출시 페이지 주소를 알게 되면 아래처럼 버튼을 추가하세요.
+                <p style="margin-top:18px"><a class="back" href="스토브-주소" target="_blank" rel="noopener">스토브에서 보기 ↗</a></p> -->
+            </div>
+            <div class="polaroid"><img src="assets/title.jpg" alt="언럭키 히어로즈 타이틀 화면. 전사, 궁수, 마법사, 기사, 도끼 전사 캐릭터와 슬라임이 숲길에 모여 있다."></div>
+        </header>
+
+        <section>
+            <div class="sec-head"><div class="no">01</div><div><div class="eyebrow">ABOUT THE GAME</div><h2>어떤 게임인가요</h2></div></div>
+            <p>라운드가 시작되면 필드를 둘러싼 길로 몬스터가 쏟아져 들어옵니다. 플레이어는 <strong>코인으로 캐릭터를 소환</strong>해 격자 필드에 배치하고, 같은 캐릭터를 <strong>합성해 더 높은 티어</strong>로 키워 막아 냅니다. 화면 위쪽에는 현재 스테이지와 라운드, 라운드 제한 시간, 필드의 적 수(최대 80)가 표시되고, 아래쪽에는 소환 버튼과 능력치 강화, 스페셜 몬스터 버튼, 1배속·2배속 전환이 있어요.</p>
+
+            <div class="feat">
+                <div class="card"><div class="ico">🎲</div><h3>소환과 합성</h3><p>코인으로 무작위 캐릭터를 소환하고, 합성해 티어를 올립니다. 소환 가능한 티어는 해금하며 넓혀 가요.</p></div>
+                <div class="card"><div class="ico">⚡</div><h3>5티어 고유 스킬</h3><p>5티어는 '조합법'으로 만들며 고유 스킬을 씁니다: 심연의 균열, 광전사의 각성, 심판의 일격, 천벌.</p></div>
+                <div class="card"><div class="ico">🔨</div><h3>모루 강화와 증강</h3><p>모루 강화 6종(공격력, 공격속도, 방어 감소, 보스 시간, 적 수 제한, 캐릭터 수 제한)과 증강 34종으로 판의 흐름을 바꿔요.</p></div>
+                <div class="card"><div class="ico">🏰</div><h3>영구 성장</h3><p>로비의 대장간에서 능력치, 훈련장에서 패시브를 강화하고, 도감에서 해금한 캐릭터를 확인합니다.</p></div>
+            </div>
+        </section>
+
+        <section>
+            <div class="sec-head"><div class="no">02</div><div><div class="eyebrow">PLAY FLOW</div><h2>플레이 화면</h2></div></div>
+            <p>아래 화면은 타이틀에서 전투까지 이어지는 흐름입니다. 이미지를 누르면 크게 볼 수 있어요.</p>
+            <div class="gallery">
+                <figure><button type="button" data-full="assets/lobby.jpg" data-cap="로비: 대장간, 도감, 훈련장, GAME START"><img src="assets/lobby.jpg" alt="로비 화면. 대장간, 도감, 훈련장 버튼과 GAME START 버튼이 있다." loading="lazy"></button>
+                    <figcaption><b>① 로비</b>대장간(능력치), 도감, 훈련장(패시브)과 GAME START가 한 화면에 모여 있어요.</figcaption></figure>
+                <figure><button type="button" data-full="assets/lobby-guide.jpg" data-cap="처음 들어가면 나오는 안내창"><img src="assets/lobby-guide.jpg" alt="능력치 강화소 안내창. 코인을 사용해 공격력, 코인 획득량, 시작 코인, 배치 인원을 영구 강화한다는 설명." loading="lazy"></button>
+                    <figcaption><b>② 첫 진입 안내</b>처음 들어가면 강화소와 도감, 게임 시작 방법을 4장으로 안내해요.</figcaption></figure>
+                <figure><button type="button" data-full="assets/stage-select.jpg" data-cap="스테이지 선택"><img src="assets/stage-select.jpg" alt="Stage 1 두루마리 스테이지 선택 화면." loading="lazy"></button>
+                    <figcaption><b>③ 스테이지 선택</b>두루마리에서 도전할 스테이지를 고르고 화살표로 넘겨요.</figcaption></figure>
+                <figure><button type="button" data-full="assets/game-guide.jpg" data-cap="전투 안내: 소환"><img src="assets/game-guide.jpg" alt="전투 첫 안내창. 뽑기 버튼을 눌러 코인으로 새로운 캐릭터를 소환할 수 있다는 설명." loading="lazy"></button>
+                    <figcaption><b>④ 전투 안내</b>전투 방법을 10장으로 나눠 알려 줘요. 첫 장은 소환 버튼 설명이에요.</figcaption></figure>
+                <figure><button type="button" data-full="assets/game-start.jpg" data-cap="전투 시작: 빈 필드와 시작 코인"><img src="assets/game-start.jpg" alt="전투 시작 화면. 빈 격자 필드와 코인 300 표시." loading="lazy"></button>
+                    <figcaption><b>⑤ 전투 시작</b>빈 필드와 시작 코인으로 출발해요. 시작 코인은 대장간 강화로 늘릴 수 있어요.</figcaption></figure>
+                <figure><button type="button" data-full="assets/battle-1.jpg" data-cap="전투 중: 라운드 3"><img src="assets/battle-1.jpg" alt="라운드 3 전투 화면. 필드의 캐릭터 10명, 필드를 둘러싼 몬스터와 공격 수치." loading="lazy"></button>
+                    <figcaption><b>⑥ 전투 중 (라운드 3)</b>필드를 둘러싼 길로 몬스터가 돌고, 캐릭터가 자동으로 공격해요.</figcaption></figure>
+                <figure><button type="button" data-full="assets/battle-2.jpg" data-cap="전투 중: 라운드 6"><img src="assets/battle-2.jpg" alt="라운드 6 전투 화면. 필드의 캐릭터 18명과 몬스터." loading="lazy"></button>
+                    <figcaption><b>⑦ 전투 중 (라운드 6)</b>필드의 캐릭터가 18명으로 늘고, 필드를 둘러싼 몬스터도 많아졌어요.</figcaption></figure>
+            </div>
+        </section>
+
+        <section>
+            <div class="sec-head"><div class="no">03</div><div><div class="eyebrow">GAMEPLAY</div><h2>플레이 영상</h2></div></div>
+            <div class="video">
+                <div class="polaroid"><img src="assets/play.webp" alt="스테이지 1 전투 영상. 캐릭터가 늘어나며 몬스터를 막는 장면이 약 1분 40초 동안 이어진다." loading="lazy"></div>
+                <p class="note">스테이지 1을 약 1분 40초 동안 기록한 장면입니다(초당 4프레임). 소환 버튼만 자동으로 눌러 촬영해서 합성·강화 조작은 들어 있지 않아요.</p>
+            </div>
+        </section>
+
+        <section>
+            <div class="sec-head"><div class="no">04</div><div><div class="eyebrow">MY ROLE</div><h2>내가 맡은 일</h2></div></div>
+            <p>4명 팀에서 <strong>개발을 맡아</strong> 게임의 전체 프로그래밍을 구현했습니다. 기획, 아트, QA는 팀원이 담당했어요.</p>
+            <ul class="list">
+                <li><strong>핵심 루프 구현:</strong> 라운드제 몬스터 무한 소환, 티어 해금형 소환과 합성</li>
+                <li><strong>데이터 구조:</strong> ScriptableObject 기반으로 캐릭터와 밸런스 데이터를 설계</li>
+                <li><strong>콘텐츠:</strong> 특수 몬스터(버튼 소환, 자동 소멸, 특수 코인)와 조합표 UI(3초 후 자동 소멸, 재조합 가능)</li>
+                <li><strong>최적화:</strong> 적 이동의 SpriteRenderer 캐싱, 공격 대상 탐색 0.2초 캐싱, UI를 값이 바뀔 때만 갱신</li>
+            </ul>
+            <div class="chips"><span>Unity 6.3 LTS</span><span>C#</span><span>ScriptableObject</span><span>SPUM</span></div>
+            <div class="callout">이 페이지의 화면과 영상은 개발 저장소의 최신 빌드를 직접 실행해 캡처한 것입니다. 스토브에 출시된 버전과 일부 다를 수 있어요.</div>
+        </section>
+    </main>
+
+    <footer><div class="wrap">언럭키 히어로즈 소개 · <a href="../">게임 모음으로</a> · <span>게임과 이미지의 권리는 제작팀에 있습니다.</span></div></footer>
+
+    <dialog class="lightbox" id="lightbox" aria-label="이미지 크게 보기"><img id="lb-img" src="" alt=""><p id="lb-cap"></p></dialog>
+    <script>
+        (function () {
+            var dlg = document.getElementById('lightbox'), img = document.getElementById('lb-img'), cap = document.getElementById('lb-cap');
+            document.querySelectorAll('figure button[data-full]').forEach(function (b) {
+                b.addEventListener('click', function () {
+                    img.src = b.getAttribute('data-full'); img.alt = b.querySelector('img').alt; cap.textContent = b.getAttribute('data-cap') || '';
+                    if (dlg.showModal) dlg.showModal();
+                });
+            });
+            dlg.addEventListener('click', function () { dlg.close(); });
+        })();
+    </script>
+</body>
+</html>
