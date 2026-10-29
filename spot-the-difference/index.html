@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>기억의 모순</title>
+<meta name="description" content="같은 장소, 다른 시각의 두 사진. 그 차이가 사건의 증거가 되는 미스터리 틀린그림찾기.">
+<meta property="og:title" content="기억의 모순">
+<meta property="og:description" content="같은 장소, 다른 시각의 두 사진. 그 차이가 사건의 증거가 된다.">
+<link rel="icon" href="favicon.ico">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@700&display=swap">
+<style>
+/* 게임 화면이 주인공: 어두운 바탕 위에 캔버스를 꽉 채우고, 불러오는 동안만 제목과 진행 막대를 보여준다 */
+:root {
+  --bg: #1d1916;
+  --panel: #2a2420;
+  --fg: #f3e6cf;
+  --muted: #a8968a;
+  --accent: #ff7a59;
+  --font-display: "Gowun Batang", "Apple SD Gothic Neo", "Malgun Gothic", serif;
+  --font-body: "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", system-ui, sans-serif;
+  color-scheme: dark;
+}
+html, body { height: 100%; margin: 0; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  overflow: hidden;
+  padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
+  box-sizing: border-box;
+}
+#stage { position: relative; width: 100%; height: 100%; }
+#unity-canvas { display: block; width: 100%; height: 100%; background: var(--bg); outline: none; touch-action: none; }
+
+.overlay {
+  position: absolute; inset: 0;
+  display: grid; place-content: center; justify-items: center; gap: 18px;
+  background: var(--bg); text-align: center; padding-inline: 16px;
+}
+.overlay[hidden] { display: none !important; }
+.overlay h1 { margin: 0; font-family: var(--font-display); font-size: clamp(28px, 6vw, 52px); font-weight: 700; letter-spacing: 0.02em; }
+.overlay p { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.6; max-width: 34em; }
+.bar { width: min(320px, 70vw); height: 8px; border-radius: 4px; background: var(--panel); overflow: hidden; }
+.bar > i { display: block; height: 100%; width: 0; background: var(--accent); transition: width 0.2s; }
+#percent { font-variant-numeric: tabular-nums; color: var(--muted); font-size: 13px; }
+#error { color: var(--accent); }
+
+#rotate { display: none; background: rgba(29, 25, 22, 0.94); }
+@media (orientation: portrait) and (max-width: 900px) {
+  #rotate:not([hidden]) { display: grid; }
+}
+.phone { width: 46px; height: 78px; border: 3px solid var(--fg); border-radius: 9px; animation: turn 2.4s ease-in-out infinite; }
+@keyframes turn { 0%, 30% { transform: rotate(0); } 60%, 100% { transform: rotate(-90deg); } }
+@media (prefers-reduced-motion: reduce) { .phone { animation: none; transform: rotate(-90deg); } }
+</style>
+</head>
+<body>
+<div id="stage">
+  <canvas id="unity-canvas" tabindex="-1"></canvas>
+
+  <div class="overlay" id="loading">
+    <h1>기억의 모순</h1>
+    <p>같은 장소, 다른 시각의 두 사진. 그 차이가 사건의 증거가 된다.</p>
+    <div class="bar" aria-hidden="true"><i id="progress"></i></div>
+    <span id="percent">게임을 불러오는 중 0%</span>
+    <p id="error" hidden></p>
+  </div>
+
+  <div class="overlay" id="rotate">
+    <div class="phone" aria-hidden="true"></div>
+    <p>가로로 돌려서 해 주세요.</p>
+  </div>
+</div>
+
+<script src="Build/web.loader.js"></script>
+<script>
+(function () {
+  var canvas = document.getElementById("unity-canvas");
+  var loading = document.getElementById("loading");
+  var progress = document.getElementById("progress");
+  var percent = document.getElementById("percent");
+  var error = document.getElementById("error");
+
+  function showError(message) {
+    error.hidden = false;
+    error.textContent = "게임을 열지 못했어요: " + message;
+  }
+
+  var mobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  var config = {
+    arguments: [],
+    dataUrl: "Build/web.data.unityweb",
+    frameworkUrl: "Build/web.framework.js.unityweb",
+    codeUrl: "Build/web.wasm.unityweb",
+    streamingAssetsUrl: "StreamingAssets",
+    companyName: "DefaultCompany",
+    productName: "spot the difference",
+    productVersion: "1.0",
+    // 저장 파일을 브라우저 저장소에 남긴다 (새로고침해도 기록 유지)
+    autoSyncPersistentDataPath: true,
+    showBanner: function (msg, type) { if (type === "error") showError(msg); },
+  };
+  // 폰에서는 화면 밀도를 2배까지만 써서 가볍게
+  if (mobile) config.devicePixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+
+  if (typeof createUnityInstance !== "function") {
+    showError("불러오기 파일을 찾지 못했어요.");
+    return;
+  }
+  createUnityInstance(canvas, config, function (p) {
+    progress.style.width = Math.round(p * 100) + "%";
+    percent.textContent = "게임을 불러오는 중 " + Math.round(p * 100) + "%";
+  }).then(function () {
+    loading.hidden = true;
+  }).catch(function (message) {
+    showError(String(message));
+  });
+})();
+</script>
+</body>
+</html>
