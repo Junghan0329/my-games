@@ -53,6 +53,8 @@
         .actions { padding: 8px 20px 20px; }
         .play { display: block; text-align: center; text-decoration: none; font-family: var(--display); font-size: 1.15rem; background: var(--ink); color: var(--paper); border: var(--line); border-radius: 14px; padding: 10px; box-shadow: var(--shadow-s); transition: transform .12s, box-shadow .12s; }
         .play:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--pink); }
+        .play + .play { margin-top: 10px; }
+        .play.sub { background: var(--paper); color: var(--ink); font-size: 1rem; }
         .soon { border-style: dashed; box-shadow: none; background: transparent; justify-content: center; align-items: center; text-align: center; padding: 40px 24px; color: var(--ink-mute); font-weight: 700; min-height: 240px; }
         .soon:hover { transform: none; }
         .soon b { display: block; font-family: var(--display); font-weight: 400; font-size: 1.3rem; color: var(--ink-soft); margin-bottom: 6px; }
@@ -109,30 +111,32 @@
                 <div class="actions"><a class="play" href="spot-the-difference/">▶ 플레이하기</a></div>
             </article>
 
+            <!-- 아래 두 카드는 작업실(my-works)에 있던 문구 그대로. 게임 파일은 작업실 사이트에 있다 -->
             <article class="card">
                 <div class="top" style="background: var(--green)">
                     <div class="emoji">🌟</div>
-                    <div><h2>루미나 테일즈</h2><small>Lumina Tales · SD 판타지 MMORPG</small></div>
+                    <div><h2>Lumina Tales (루미나 테일즈)</h2></div>
                 </div>
                 <div class="body">
-                    <p>꾸미고, 강해지고, 함께 어둠의 보스를 쓰러뜨리는 <b>SD 판타지 MMORPG</b>입니다.</p>
-                    <div class="tags"><span>Unity</span><span>C#</span><span>MMORPG</span><span>PC</span></div>
-                    <div class="tip">💻 PC 브라우저를 권장해요. 처음엔 불러오는 데 시간이 걸려요.</div>
+                    <p>꾸미고, 강해지고, 함께 어둠의 보스를 쓰러뜨리는 SD 판타지 MMORPG</p>
+                    <div class="tip">💻 PC 브라우저 권장 · 처음엔 불러오는 데 시간이 걸려요</div>
                 </div>
-                <div class="actions"><a class="play" href="https://my-works-tau.vercel.app/lumina-tales/">▶ 플레이하기</a></div>
+                <div class="actions"><a class="play" href="https://my-works-tau.vercel.app/lumina-tales/">웹 플레이 ↗</a></div>
             </article>
 
             <article class="card">
                 <div class="top">
                     <div class="emoji">🎓</div>
-                    <div><h2>대학생 키우기</h2><small>캡스톤 디자인 · 프로토타입</small></div>
+                    <div><h2>대학생키우기(캡스톤 디자인)</h2></div>
                 </div>
                 <div class="body">
-                    <p>캡스톤 디자인 「대학생 키우기」 v2 <b>프로토타입</b>을 폰 브라우저에서 바로 플레이할 수 있어요.</p>
-                    <div class="tags"><span>Unity</span><span>C#</span><span>캡스톤 디자인</span><span>모바일</span></div>
-                    <div class="tip">📱 폰에서 열면 더 편해요. 개발 중인 프로토타입이라 달라질 수 있어요.</div>
+                    <p>캡스톤디자인 「대학생 키우기」 v2 프로토타입을 폰 브라우저에서 바로 플레이하고, 매일 쓰는 개발일지를 일차별로 볼 수 있어요.</p>
+                    <div class="tip">🔒 개발일지는 본인만 열람</div>
                 </div>
-                <div class="actions"><a class="play" href="https://my-works-tau.vercel.app/daehaksaeng/">▶ 플레이하기</a></div>
+                <div class="actions">
+                    <a class="play" href="https://my-works-tau.vercel.app/daehaksaeng/">프로토타입 플레이 ↗</a>
+                    <a class="play sub" href="https://claude.ai/artifact/RYAw8F1DZqwiUH4zjMYqHR">개발일지 (본인만) ↗</a>
+                </div>
             </article>
 
             <article class="card soon">
